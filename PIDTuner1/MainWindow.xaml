@@ -1,0 +1,38 @@
+﻿<Window x:Class="PIDTuner1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PIDTuner1"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <TextBox x:Name="steeringP" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="58,181,0,0"/>
+        <TextBox x:Name="steeringI" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="198,181,0,0"/>
+        <TextBox x:Name="steeringD" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="338,181,0,0"/>
+        <TextBox x:Name="motorP" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="58,252,0,0"/>
+        <TextBox x:Name="motorI" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="198,252,0,0"/>
+        <TextBox x:Name="motorD" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="338,252,0,0"/>
+        <Label Content="P" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="110,150,0,0"/>
+        <Label Content="I" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="252,150,0,0"/>
+        <Label Content="D" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="390,150,0,0"/>
+        <Label Content="P" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="110,221,0,0" RenderTransformOrigin="0.498,2.793"/>
+        <Label Content="I" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="252,221,0,0"/>
+        <Label Content="D" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="390,221,0,0"/>
+        <ComboBox x:Name="baudRateList" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Margin="0,26,0,0">
+            <ComboBoxItem Tag="9600" IsSelected="True">9600</ComboBoxItem>
+            <ComboBoxItem Tag="19200">19200</ComboBoxItem>
+            <ComboBoxItem Tag="38400">38400</ComboBoxItem>
+            <ComboBoxItem Tag="57600">57600</ComboBoxItem>
+            <ComboBoxItem Tag="115200">115200</ComboBoxItem>
+        </ComboBox>
+        <Label Content="BAUD&#xD;&#xA;" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <ComboBox x:Name="comPortList" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Margin="0,89,0,0"/>
+        <Label Content="COM" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,63,0,0"/>
+        <Button x:Name="connectBtn" Content="Connect" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="45,125,0,0" Click="connectBtn_Click" />
+        <Button x:Name="tuneBtn" Content="Tune" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="432,289,0,0" Click="tuneBtn_Click"/>
+        <Label Content="Steering" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,178,0,0"/>
+        <Label Content="Motor" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,249,0,0"/>
+
+    </Grid>
+</Window>
