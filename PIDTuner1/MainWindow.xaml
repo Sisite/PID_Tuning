@@ -30,9 +30,10 @@
         <ComboBox x:Name="comPortList" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Margin="0,89,0,0"/>
         <Label Content="COM" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,63,0,0"/>
         <Button x:Name="connectBtn" Content="Connect" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="45,125,0,0" Click="connectBtn_Click" />
-        <Button x:Name="tuneBtn" Content="Tune" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="432,289,0,0" Click="tuneBtn_Click"/>
+        <Button x:Name="tuneMotor" Content="Tune" HorizontalAlignment="Left" VerticalAlignment="Top" Width="40" Margin="467,255,0,0" Click="tuneMotor_Click"/>
         <Label Content="Steering" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,178,0,0"/>
         <Label Content="Motor" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,249,0,0"/>
+        <Button x:Name="tuneSteering" Content="Tune" HorizontalAlignment="Left" VerticalAlignment="Top" Width="40" Margin="467,184,0,0" Click="tuneSteering_Click"/>
 
     </Grid>
 </Window>
