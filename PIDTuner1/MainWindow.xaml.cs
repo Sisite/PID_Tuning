@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO.Ports;
+using System.Threading;
 
 namespace PIDTuner1
 {
@@ -22,6 +23,7 @@ namespace PIDTuner1
     public partial class MainWindow : Window
     {
         SerialPort serialPort;
+        Thread serialThread;
         bool _continue = false;
         public MainWindow()
         {    
@@ -62,6 +64,7 @@ namespace PIDTuner1
 
         private String readFromSerial ()
         {
+            
             while (_continue) {
                 string message = serialPort.ReadLine();
                 return message;
@@ -83,14 +86,18 @@ namespace PIDTuner1
                 serialPort = new SerialPort(portName, baudRate, Parity.None, 8, StopBits.One);
                 serialPort.Open();
                 _continue = true;
-                populateParameters(readFromSerial());
-
+                getParameters();
+                if (serialThread == null || (serialThread != null && !serialThread.IsAlive))
+                {
+                    serialThread = new Thread(new ThreadStart(populateParameters));
+                }
             }
 
         }
 
-        private void populateParameters (string paramString)
+        private void populateParameters ()
         {
+            string paramString = readFromSerial();
             string[] splitString;
             splitString = paramString.Split(':');
             motorP.Text = splitString[0];
@@ -103,14 +110,20 @@ namespace PIDTuner1
 
         private void tuneMotor_Click(object sender, RoutedEventArgs e)
         {
-            string str = ("TM:" + motorP.Text + ":" + motorI.Text + ":" + motorP.Text + ":;");
-            serialPort.Write(str);
+            if (serialPort != null)
+            { 
+                string str = ("TM:" + motorP.Text + ":" + motorI.Text + ":" + motorP.Text + ":;");
+                serialPort.Write(str);
+            }
         }
 
         private void tuneSteering_Click(object sender, RoutedEventArgs e)
         {
-            string str = ("TS:" + steeringP.Text + ":" + steeringI.Text + ":" + steeringP.Text + ":;");
-            serialPort.Write(str);
+            if (serialPort != null)
+            {
+                string str = ("TS:" + steeringP.Text + ":" + steeringI.Text + ":" + steeringP.Text + ":;");
+                serialPort.Write(str);
+            }
         }
     }
 }
