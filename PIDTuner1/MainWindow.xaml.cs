@@ -24,7 +24,7 @@ namespace PIDTuner1
     {
         SerialPort serialPort;
         Thread serialThread;
-        Encoding asciiEncoding = Encoding.ASCII;
+        //Encoding asciiEncoding = Encoding.ASCII;
         bool _continue = false;
         public MainWindow()
         {    
@@ -51,6 +51,22 @@ namespace PIDTuner1
                 (comPortList.Items[0] as ComboBoxItem).IsSelected = true;
             }
         }
+        
+        private string utfToAscii (string str)
+        {
+            byte[] uni = Encoding.Unicode.GetBytes(str);
+
+            // Convert to ASCII
+
+            return Encoding.ASCII.GetString(uni);
+        }
+
+        private string asciiToUtf (string str)
+        {
+            byte[] ascii = Encoding.ASCII.GetBytes(str);
+
+            return Encoding.Unicode.GetString(ascii);
+        }
 
 
         //Communication example T:M:4000.0:4000.0:4000.0:;
@@ -60,7 +76,7 @@ namespace PIDTuner1
         private void getParameters() {
             if (serialPort.IsOpen) {
 
-                serialPort.Write("F0;");
+                serialPort.Write(utfToAscii("F0;"));
             }
         }
 
@@ -70,7 +86,7 @@ namespace PIDTuner1
             while (_continue) {
                 
                 string message = serialPort.ReadLine();
-                return message;
+                return asciiToUtf(message);
             }
             return null;
         }
@@ -88,7 +104,7 @@ namespace PIDTuner1
                     serialPort = null; 
                 }
                 serialPort = new SerialPort(portName, baudRate, Parity.None, 8, StopBits.One);
-                serialPort.NewLine = "," ;
+                serialPort.NewLine = ";" ;
                 if (serialPort.IsOpen == false)
                 {
                     serialPort.Open();
@@ -122,7 +138,7 @@ namespace PIDTuner1
         {
             if (serialPort != null)
             { 
-                string str = ("TM:" + motorP.Text + ":" + motorI.Text + ":" + motorP.Text + ":;");
+                string str = (utfToAscii("TM:" + motorP.Text + ":" + motorI.Text + ":" + motorP.Text + ":;"));
                 serialPort.Write(str);
             }
         }
@@ -131,7 +147,7 @@ namespace PIDTuner1
         {
             if (serialPort != null)
             {
-                string str = ("TS:" + steeringP.Text + ":" + steeringI.Text + ":" + steeringP.Text + ":;");
+                string str = (utfToAscii("TS:" + steeringP.Text + ":" + steeringI.Text + ":" + steeringP.Text + ":;"));
                 serialPort.Write(str);
             }
         }
@@ -140,7 +156,7 @@ namespace PIDTuner1
         {
             if (serialPort != null)
             {
-                string str = ("CV:" + speedBox.Text + ":;");
+                string str = (utfToAscii("CV:" + speedBox.Text + ":;"));
                 serialPort.Write(str);
             }
         }
