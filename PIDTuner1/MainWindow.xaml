@@ -7,12 +7,12 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <TextBox x:Name="steeringP" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="58,181,0,0"/>
-        <TextBox x:Name="steeringI" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="198,181,0,0"/>
-        <TextBox x:Name="steeringD" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="338,181,0,0"/>
-        <TextBox x:Name="motorP" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="58,252,0,0"/>
-        <TextBox x:Name="motorI" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="198,252,0,0"/>
-        <TextBox x:Name="motorD" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="338,252,0,0"/>
+        <TextBox x:Name="steeringP" MaxLength="6" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="58,181,0,0"/>
+        <TextBox x:Name="steeringI" MaxLength="6" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="198,181,0,0"/>
+        <TextBox x:Name="steeringD" MaxLength="6" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="338,181,0,0"/>
+        <TextBox x:Name="motorP" MaxLength="6" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="58,252,0,0"/>
+        <TextBox x:Name="motorI" MaxLength="6" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="198,252,0,0"/>
+        <TextBox x:Name="motorD" MaxLength="6" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="338,252,0,0"/>
         <Label Content="P" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="110,150,0,0"/>
         <Label Content="I" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="252,150,0,0"/>
         <Label Content="D" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="390,150,0,0"/>
@@ -34,6 +34,9 @@
         <Label Content="Steering" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,178,0,0"/>
         <Label Content="Motor" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,249,0,0"/>
         <Button x:Name="tuneSteering" Content="Tune" HorizontalAlignment="Left" VerticalAlignment="Top" Width="40" Margin="467,184,0,0" Click="tuneSteering_Click"/>
+        <TextBox x:Name="speedBox" MaxLength="6" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="338,19,0,0"/>
+        <Button x:Name="change_Speed_Btn" Content="Set" HorizontalAlignment="Left" VerticalAlignment="Top" Width="40" Margin="467,22,0,0" RenderTransformOrigin="0.45,-7.9" Click="change_Speed_Btn_Click"/>
+        <Label Content="Speed" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="295,16,0,0"/>
 
     </Grid>
 </Window>

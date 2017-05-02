@@ -24,6 +24,7 @@ namespace PIDTuner1
     {
         SerialPort serialPort;
         Thread serialThread;
+        Encoding asciiEncoding = Encoding.ASCII;
         bool _continue = false;
         public MainWindow()
         {    
@@ -58,7 +59,8 @@ namespace PIDTuner1
 
         private void getParameters() {
             if (serialPort.IsOpen) {
-                serialPort.Write("F0");
+
+                serialPort.Write("F0;");
             }
         }
 
@@ -66,11 +68,13 @@ namespace PIDTuner1
         {
             
             while (_continue) {
+                
                 string message = serialPort.ReadLine();
                 return message;
             }
             return null;
         }
+        
 
         private void connectBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -84,7 +88,11 @@ namespace PIDTuner1
                     serialPort = null; 
                 }
                 serialPort = new SerialPort(portName, baudRate, Parity.None, 8, StopBits.One);
-                serialPort.Open();
+                serialPort.NewLine = "," ;
+                if (serialPort.IsOpen == false)
+                {
+                    serialPort.Open();
+                }
                 _continue = true;
                 getParameters();
                 if (serialThread == null || (serialThread != null && !serialThread.IsAlive))
@@ -100,12 +108,14 @@ namespace PIDTuner1
             string paramString = readFromSerial();
             string[] splitString;
             splitString = paramString.Split(':');
-            motorP.Text = splitString[0];
-            motorI.Text = splitString[1];
-            motorD.Text = splitString[2];
-            steeringP.Text = splitString[3];
-            steeringI.Text = splitString[4];
-            steeringD.Text = splitString[5];
+            speedBox.Text = splitString[0];
+            motorP.Text = splitString[1];
+            motorI.Text = splitString[2];
+            motorD.Text = splitString[3];
+            steeringP.Text = splitString[4];
+            steeringI.Text = splitString[5];
+            steeringD.Text = splitString[6];
+
         }
 
         private void tuneMotor_Click(object sender, RoutedEventArgs e)
@@ -122,6 +132,15 @@ namespace PIDTuner1
             if (serialPort != null)
             {
                 string str = ("TS:" + steeringP.Text + ":" + steeringI.Text + ":" + steeringP.Text + ":;");
+                serialPort.Write(str);
+            }
+        }
+
+        private void change_Speed_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            if (serialPort != null)
+            {
+                string str = ("CV:" + speedBox.Text + ":;");
                 serialPort.Write(str);
             }
         }
