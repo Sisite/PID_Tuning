@@ -98,7 +98,7 @@ namespace PIDTuner1
         private String readFromSerial ()
         {          
             string message = serialPort.ReadLine();
-            Console.WriteLine(message);
+            //Console.WriteLine(message);
             return asciiToUtf(message);
         }
         
@@ -143,7 +143,7 @@ namespace PIDTuner1
         {
             if (serialPort != null)
             { 
-                string str = (utfToAscii("TM:" + motorP.Text + ":" + motorI.Text + ":" + motorP.Text + ":;"));
+                string str = (utfToAscii("TM:" + motorP.Text + ":" + motorI.Text + ":" + motorD.Text + ":;"));
                 serialPort.Write(str);
             }
         }
@@ -152,7 +152,7 @@ namespace PIDTuner1
         {
             if (serialPort != null)
             {
-                string str = (utfToAscii("TS:" + steeringP.Text + ":" + steeringI.Text + ":" + steeringP.Text + ":;"));
+                string str = (utfToAscii("TS:" + steeringP.Text + ":" + steeringI.Text + ":" + steeringD.Text + ":;"));
                 serialPort.Write(str);
             }
         }
@@ -169,10 +169,11 @@ namespace PIDTuner1
         private void fetchBtn_Click(object sender, RoutedEventArgs e)
         {
             getParameters();
-            if (serialThread == null || (serialThread != null && !serialThread.IsAlive))
-            {
-                serialThread = new Thread(new ThreadStart(populateParameters));
-            }
+            /*  if (serialThread == null || (serialThread != null && !serialThread.IsAlive))
+              {
+                  serialThread = new Thread(new ThreadStart(populateParameters));
+              } */
+            populateParameters();
 
         }
 
