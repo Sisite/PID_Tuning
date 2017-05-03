@@ -24,7 +24,8 @@ namespace PIDTuner1
     {
         SerialPort serialPort;
         Thread serialThread;
-        //Encoding asciiEncoding = Encoding.ASCII;
+        Encoding ascii = Encoding.ASCII;
+        Encoding unicode = Encoding.Unicode;
         bool _continue = false;
         public MainWindow()
         {    
@@ -57,15 +58,29 @@ namespace PIDTuner1
             byte[] uni = Encoding.Unicode.GetBytes(str);
 
             // Convert to ASCII
+            byte[] asciiB = Encoding.Convert(unicode, ascii, uni);
+            char[] asciiC = new char[ascii.GetCharCount(asciiB, 0, asciiB.Length)];
+            ascii.GetChars(asciiB, 0, asciiB.Length, asciiC, 0);
+            string asciiS = new string(asciiC);
+            Console.WriteLine(asciiS);
 
-            return Encoding.ASCII.GetString(uni);
+            return asciiS;
         }
 
         private string asciiToUtf (string str)
         {
-            byte[] ascii = Encoding.ASCII.GetBytes(str);
+            
+            byte[] asc = Encoding.ASCII.GetBytes(str);
+            byte[] uniB = Encoding.Convert(ascii, unicode, asc);
 
-            return Encoding.Unicode.GetString(ascii);
+            char[] uniC = new char[unicode.GetCharCount(uniB, 0, uniB.Length)];
+            unicode.GetChars(uniB, 0, uniB.Length, uniC, 0);
+            string uniS = new string(uniC);
+
+            Console.WriteLine(uniS);
+
+
+            return uniS;
         }
 
 
@@ -81,14 +96,10 @@ namespace PIDTuner1
         }
 
         private String readFromSerial ()
-        {
-            
-            while (_continue) {
-                
-                string message = serialPort.ReadLine();
-                return asciiToUtf(message);
-            }
-            return null;
+        {          
+            string message = serialPort.ReadLine();
+            Console.WriteLine(message);
+            return asciiToUtf(message);
         }
         
 
@@ -108,13 +119,7 @@ namespace PIDTuner1
                 if (serialPort.IsOpen == false)
                 {
                     serialPort.Open();
-                }
-                _continue = true;
-                getParameters();
-                if (serialThread == null || (serialThread != null && !serialThread.IsAlive))
-                {
-                    serialThread = new Thread(new ThreadStart(populateParameters));
-                }
+                }               
             }
 
         }
@@ -158,6 +163,24 @@ namespace PIDTuner1
             {
                 string str = (utfToAscii("CV:" + speedBox.Text + ":;"));
                 serialPort.Write(str);
+            }
+        }
+
+        private void fetchBtn_Click(object sender, RoutedEventArgs e)
+        {
+            getParameters();
+            if (serialThread == null || (serialThread != null && !serialThread.IsAlive))
+            {
+                serialThread = new Thread(new ThreadStart(populateParameters));
+            }
+
+        }
+
+        private void disconnectBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if(serialPort.IsOpen)
+            {
+                serialPort.Close();
             }
         }
     }

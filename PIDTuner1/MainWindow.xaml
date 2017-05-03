@@ -27,9 +27,9 @@
             <ComboBoxItem Tag="115200">115200</ComboBoxItem>
         </ComboBox>
         <Label Content="BAUD&#xD;&#xA;" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <ComboBox x:Name="comPortList" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Margin="0,89,0,0"/>
-        <Label Content="COM" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,63,0,0"/>
-        <Button x:Name="connectBtn" Content="Connect" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="45,125,0,0" Click="connectBtn_Click" />
+        <ComboBox x:Name="comPortList" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Margin="0,76,0,0"/>
+        <Label Content="COM" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,53,0,0" RenderTransformOrigin="0.541,-0.385"/>
+        <Button x:Name="connectBtn" Content="Connect" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="137,26,0,0" Click="connectBtn_Click" />
         <Button x:Name="tuneMotor" Content="Tune" HorizontalAlignment="Left" VerticalAlignment="Top" Width="40" Margin="467,255,0,0" Click="tuneMotor_Click"/>
         <Label Content="Steering" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,178,0,0"/>
         <Label Content="Motor" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,249,0,0"/>
@@ -37,6 +37,8 @@
         <TextBox x:Name="speedBox" MaxLength="6" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="338,19,0,0"/>
         <Button x:Name="change_Speed_Btn" Content="Set" HorizontalAlignment="Left" VerticalAlignment="Top" Width="40" Margin="467,22,0,0" RenderTransformOrigin="0.45,-7.9" Click="change_Speed_Btn_Click"/>
         <Label Content="Speed" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="295,16,0,0"/>
+        <Button x:Name="disconnectBtn" Content="Disconnect" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" RenderTransformOrigin="3.213,6.7" Margin="137,76,0,0" Click="disconnectBtn_Click"/>
+        <Button x:Name="fetchBtn" Content="Fetch" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="137,51,0,0" Click="fetchBtn_Click"/>
 
     </Grid>
 </Window>
