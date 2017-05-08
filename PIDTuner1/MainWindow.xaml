@@ -3,11 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:local="clr-namespace:PIDTuner1"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="1000" Width="1920">
     <Grid>
-        <TextBox x:Name="steeringP" MaxLength="6" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="58,181,0,0"/>
+        <TextBox x:Name="steeringP"  MaxLength="6" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="58,181,0,0"/>
         <TextBox x:Name="steeringI" MaxLength="6" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="198,181,0,0"/>
         <TextBox x:Name="steeringD" MaxLength="6" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="338,181,0,0"/>
         <TextBox x:Name="motorP" MaxLength="6" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="58,252,0,0"/>
@@ -39,6 +40,10 @@
         <Label Content="Speed" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="295,16,0,0"/>
         <Button x:Name="disconnectBtn" Content="Disconnect" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" RenderTransformOrigin="3.213,6.7" Margin="137,76,0,0" Click="disconnectBtn_Click"/>
         <Button x:Name="fetchBtn" Content="Fetch" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="137,51,0,0" Click="fetchBtn_Click"/>
+        <lvc:CartesianChart Series="{Binding SeriesCollection}" Height="500" Width="500" Margin="1376,19,36,530"/>
+        <TextBox x:Name="lpfBox" MaxLength="6" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="338,53,0,0"/>
+        <Label Content="LPF" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="300,53,0,0"/>
+        <Button x:Name="setLPFButton" Content="Set" HorizontalAlignment="Left" VerticalAlignment="Top" Width="40" Margin="467,56,0,0" Click="setLPFButton_Click"/>
 
     </Grid>
 </Window>

@@ -14,6 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO.Ports;
 using System.Threading;
+using LiveCharts;
+using LiveCharts.Wpf;
 
 namespace PIDTuner1
 {
@@ -28,12 +30,27 @@ namespace PIDTuner1
         Encoding unicode = Encoding.Unicode;
         bool _continue = false;
         public MainWindow()
-        {    
+        {
             InitializeComponent();
             getComPorts();
+            disconnectBtn.IsEnabled = false;
+            fetchBtn.IsEnabled = false;
+            //pidSteeringCollection;
 
-            
+
         }
+
+        SeriesCollection pidSteeringCollection = new SeriesCollection
+        {
+            new LineSeries
+            {
+                Values = new ChartValues<double> {3,5,6,2}
+            },
+            new ColumnSeries
+            {
+                Values = new ChartValues<decimal> {4,6,2,4}
+            }
+        };
 
         private void getComPorts ()
         {
@@ -119,6 +136,9 @@ namespace PIDTuner1
                 if (serialPort.IsOpen == false)
                 {
                     serialPort.Open();
+                    connectBtn.IsEnabled = false;
+                    disconnectBtn.IsEnabled = true;
+                    fetchBtn.IsEnabled = true;
                 }               
             }
 
@@ -182,6 +202,18 @@ namespace PIDTuner1
             if(serialPort.IsOpen)
             {
                 serialPort.Close();
+                connectBtn.IsEnabled = true;
+                fetchBtn.IsEnabled = false;
+                disconnectBtn.IsEnabled = false;
+            }
+        }
+
+        private void setLPFButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (serialPort != null)
+            {
+                string str = (utfToAscii("SL:" + lpfBox.Text + ":;"));
+                serialPort.Write(str);
             }
         }
     }
