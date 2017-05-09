@@ -14,8 +14,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO.Ports;
 using System.Threading;
-using LiveCharts;
-using LiveCharts.Wpf;
 
 namespace PIDTuner1
 {
@@ -40,17 +38,17 @@ namespace PIDTuner1
 
         }
 
-        SeriesCollection pidSteeringCollection = new SeriesCollection
-        {
-            new LineSeries
-            {
-                Values = new ChartValues<double> {3,5,6,2}
-            },
-            new ColumnSeries
-            {
-                Values = new ChartValues<decimal> {4,6,2,4}
-            }
-        };
+        //SeriesCollection pidSteeringCollection = new SeriesCollection
+        //{
+        //    new LineSeries
+        //    {
+        //        Values = new ChartValues<double> {3,5,6,2}
+        //    },
+        //    new ColumnSeries
+        //    {
+        //        Values = new ChartValues<decimal> {4,6,2,4}
+        //    }
+        //};
 
         private void getComPorts ()
         {
@@ -153,9 +151,12 @@ namespace PIDTuner1
             motorP.Text = splitString[1];
             motorI.Text = splitString[2];
             motorD.Text = splitString[3];
-            steeringP.Text = splitString[4];
-            steeringI.Text = splitString[5];
-            steeringD.Text = splitString[6];
+            lpfBoxMotor.Text = splitString[4];
+            steeringP.Text = splitString[5];
+            steeringI.Text = splitString[6];
+            steeringD.Text = splitString[7];
+            lpfBoxSteering.Text = splitString[8];
+            
 
         }
 
@@ -208,11 +209,20 @@ namespace PIDTuner1
             }
         }
 
-        private void setLPFButton_Click(object sender, RoutedEventArgs e)
+        private void setLPFButtonSteering_Click(object sender, RoutedEventArgs e)
         {
             if (serialPort != null)
             {
-                string str = (utfToAscii("SL:" + lpfBox.Text + ":;"));
+                string str = (utfToAscii("LS:" + lpfBoxSteering.Text + ":;"));
+                serialPort.Write(str);
+            }
+        }
+
+        private void setLPFButtonMotor_Click(object sender, RoutedEventArgs e)
+        {
+            if (serialPort != null)
+            {
+                string str = (utfToAscii("LM:" + lpfBoxMotor.Text + ":;"));
                 serialPort.Write(str);
             }
         }
