@@ -14,6 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO.Ports;
 using System.Threading;
+using LiveCharts;
+using LiveCharts.Wpf;
 
 namespace PIDTuner1
 {
@@ -23,10 +25,8 @@ namespace PIDTuner1
     public partial class MainWindow : Window
     {
         SerialPort serialPort;
-        Thread serialThread;
         Encoding ascii = Encoding.ASCII;
         Encoding unicode = Encoding.Unicode;
-        bool _continue = false;
         public MainWindow()
         {
             InitializeComponent();
