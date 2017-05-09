@@ -269,6 +269,24 @@ namespace PIDTuner1
                 serialPort.Write(str);
             }
         }
+
+        private void startBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (serialPort != null)
+            {
+                string str = (utfToAscii("S1:;"));
+                serialPort.Write(str);
+            }
+        }
+
+        private void stopBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (serialPort != null)
+            {
+                string str = (utfToAscii("S0:;"));
+                serialPort.Write(str);
+            }
+        }
     }
 
 }
