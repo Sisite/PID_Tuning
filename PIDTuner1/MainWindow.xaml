@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        xmlns:constantChanges="clr-namespace:Wpf.CartesianChart.ConstantChanges"
         xmlns:local="clr-namespace:PIDTuner1"
         mc:Ignorable="d"
         Title="MainWindow" Height="1000" Width="1920">
@@ -46,7 +47,8 @@
         <TextBox x:Name="lpfBoxMotor" MaxLength="6" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="57,379,0,0"/>
         <Label Content="LPF M" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="11,376,0,0"/>
         <Button x:Name="setLPFButtonMotor" Content="Set" HorizontalAlignment="Left" VerticalAlignment="Top" Width="40" Margin="186,382,0,0" Click="setLPFButtonMotor_Click"/>
-        <lvc:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Right" Margin="609,26,367,435.5" >
+        <!--<lvc:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Right" Margin="609,26,367,435.5" >-->
+        <lvc:CartesianChart x:Name="cartesianChart" LegendLocation="Right" Margin="609,26,367,435.5" >
             <lvc:CartesianChart.AxisY>
                 <lvc:Axis Title="Sales" LabelFormatter="{Binding YFormatter}"></lvc:Axis>
             </lvc:CartesianChart.AxisY>
@@ -57,4 +59,5 @@
         <Button x:Name="startBtn" Content="Start" HorizontalAlignment="Left" Margin="338,64,0,0" VerticalAlignment="Top" Width="75" Click="startBtn_Click" TabIndex="8"/>
         <Button x:Name="stopBtn" Content="Stop" HorizontalAlignment="Left" Margin="432,64,0,0" VerticalAlignment="Top" Width="75" Click="stopBtn_Click" TabIndex="9"/>
     </Grid>
+    
 </Window>

@@ -17,6 +17,7 @@ using System.Threading;
 using LiveCharts;
 using LiveCharts.Wpf;
 
+
 namespace PIDTuner1
 {
     /// <summary>
@@ -34,25 +35,13 @@ namespace PIDTuner1
             disconnectBtn.IsEnabled = false;
             fetchBtn.IsEnabled = false;
             //pidSteeringCollection;
+            //CartesianChart cartesianChart = new CartesianChart();
             SeriesCollection SeriesCollection = new SeriesCollection
             {
                 new LineSeries
                 {
                     Title = "Series 1",
-                    Values = new ChartValues<double> { 4, 6, 5, 2 ,4 }
-                },
-                new LineSeries
-                {
-                    Title = "Series 2",
-                    Values = new ChartValues<double> { 6, 7, 3, 4 ,6 },
-                    PointGeometry = null
-                },
-                new LineSeries
-                {
-                    Title = "Series 3",
-                    Values = new ChartValues<double> { 4,2,7,2,7 },
-                    PointGeometry = DefaultGeometries.Square,
-                    PointGeometrySize = 15
+                    Values = new ChartValues<double> { -1.0, 0.01, 5.0, 2.0 ,4.0 }
                 }
             };
 
@@ -60,21 +49,28 @@ namespace PIDTuner1
             YFormatter = value => value.ToString("C");
 
             //modifying the series collection will animate and update the chart
-            SeriesCollection.Add(new LineSeries
+           /* SeriesCollection.Add(new LineSeries
             {
                 Title = "Series 4",
-                Values = new ChartValues<double> { 5, 3, 2, 4 },
+                Values = new ChartValues<double> { -0.1 , 0.1, 1, 4 },
                 LineSmoothness = 0, //0: straight lines, 1: really smooth lines
                 PointGeometry = Geometry.Parse("m 25 70.36218 20 -28 -20 22 -8 -6 z"),
                 PointGeometrySize = 50,
                 PointForeground = Brushes.Gray
-            });
+            });*/
 
             //modifying any series values will also animate and update the chart
-            SeriesCollection[3].Values.Add(5d);
+           // SeriesCollection[1].Values.Add(0d);
+            SeriesCollection[0].Values.Add(5d);
+
+            cartesianChart.Series = SeriesCollection;
+            
 
             DataContext = this;
-
+            ConstantChangesChart cw = new ConstantChangesChart();
+            cw.ShowInTaskbar = false;
+            cw.Owner = Application.Current.MainWindow;
+            cw.Show();
 
         }
         public SeriesCollection SeriesCollection { get; set; }
@@ -163,6 +159,8 @@ namespace PIDTuner1
 
         private void connectBtn_Click(object sender, RoutedEventArgs e)
         {
+           // cartesianChart.Series[0].Values.;
+
             if (comPortList.SelectedItem != null && baudRateList.SelectedItem != null)
             {
                 string portName = (comPortList.SelectedItem as ComboBoxItem).Tag.ToString();
