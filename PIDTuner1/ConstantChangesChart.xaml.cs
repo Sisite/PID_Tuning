@@ -9,7 +9,7 @@ using LiveCharts.Configurations;
 
 namespace Wpf.CartesianChart.ConstantChanges
 {
-    public partial class ConstantChangesChart : Window, INotifyPropertyChanged
+    public partial class ConstantChangesChart : UserControl, INotifyPropertyChanged
     {
         private double _axisMax;
         private double _axisMin;
@@ -18,6 +18,7 @@ namespace Wpf.CartesianChart.ConstantChanges
         public ConstantChangesChart()
         {
             InitializeComponent();
+            //Read();
 
             //To handle live data easily, in this case we built a specialized type
             //the MeasureModel class, it only contains 2 properties
@@ -55,7 +56,7 @@ namespace Wpf.CartesianChart.ConstantChanges
 
             IsReading = false;
 
-           // DataContext = this;
+            DataContext = this;
         }
 
         public ChartValues<MeasureModel> ChartValues { get; set; }
@@ -90,7 +91,7 @@ namespace Wpf.CartesianChart.ConstantChanges
 
             while (IsReading)
             {
-                Thread.Sleep(150);
+                Thread.Sleep(10);
                 var now = DateTime.Now;
 
                 _trend += r.Next(-8, 10);
@@ -104,7 +105,7 @@ namespace Wpf.CartesianChart.ConstantChanges
                 SetAxisLimits(now);
 
                 //lets only use the last 150 values
-                if (ChartValues.Count > 150) ChartValues.RemoveAt(0);
+                if (ChartValues.Count > 500) ChartValues.RemoveAt(0);
             }
         }
 

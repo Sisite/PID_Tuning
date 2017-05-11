@@ -63,14 +63,14 @@ namespace PIDTuner1
            // SeriesCollection[1].Values.Add(0d);
             SeriesCollection[0].Values.Add(5d);
 
-            cartesianChart.Series = SeriesCollection;
+            //cartesianChart.Series = SeriesCollection;
             
 
             DataContext = this;
-            ConstantChangesChart cw = new ConstantChangesChart();
-            cw.ShowInTaskbar = false;
-            cw.Owner = Application.Current.MainWindow;
-            cw.Show();
+           // ConstantChangesChart cw = new ConstantChangesChart();
+            //cw.ShowInTaskbar = false;
+            //cw.Owner = Application.Current.MainWindow;
+            //cw.Show();
 
         }
         public SeriesCollection SeriesCollection { get; set; }
