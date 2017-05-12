@@ -18,7 +18,6 @@ namespace Wpf.CartesianChart.ConstantChanges
         public ConstantChangesChart()
         {
             InitializeComponent();
-            //Read();
 
             //To handle live data easily, in this case we built a specialized type
             //the MeasureModel class, it only contains 2 properties
