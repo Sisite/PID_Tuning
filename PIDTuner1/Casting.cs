@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace PIDTuner1
 {
@@ -24,6 +25,23 @@ namespace PIDTuner1
             Console.WriteLine(asciiS);
 
             return asciiS;
+        }
+
+        public byte[] combineByteArrs(params byte[][] arrays)
+        {
+            byte[] rv = new byte[arrays.Sum(a => a.Length)];
+            int offset = 0;
+            foreach (byte[] array in arrays)
+            {
+                System.Buffer.BlockCopy(array, 0, rv, offset, array.Length);
+                offset += array.Length;
+            }
+            return rv;
+        }
+
+        public byte[] stringToFloatByteArray(string str)
+        {
+            return floatToArray(float.Parse(str, CultureInfo.InvariantCulture.NumberFormat));
         }
 
         public string asciiToUtf(string str)
@@ -53,10 +71,10 @@ namespace PIDTuner1
             return floatB;
         }
 
-        public float arrayToFloat(List<byte> list)
+        public float arrayToFloat(IEnumerable<byte> byteArr, int startIndex)
         {
-            byte[] arr = list.ToArray();
-            float flt = BitConverter.ToSingle(arr, 0);
+            byte[] arr = byteArr.ToArray();
+            float flt = BitConverter.ToSingle(arr, startIndex);
             return flt;
 
         }

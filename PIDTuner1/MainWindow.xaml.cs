@@ -16,6 +16,7 @@ using System.IO.Ports;
 using System.Threading;
 using LiveCharts;
 using LiveCharts.Wpf;
+using System.Globalization;
 
 
 namespace PIDTuner1
@@ -117,17 +118,24 @@ namespace PIDTuner1
         //Communication example with Steering T:M:1.0:2.5:3.5:S:0.5:0.3:4.3:;
 
         private void getParameters() {
-            if (serialPort.IsOpen) {
+            byte[] command = { Convert.ToByte(formCast.utfToAscii("F")), Convert.ToByte(formCast.utfToAscii("0")) };
+            IEnumerable<byte> encoded = COBS.Encode(command);
 
-                serialPort.Write(formCast.utfToAscii("F0;"));
+            if (serialPort != null)
+            {
+                serialPort.Write(encoded.ToArray(), 0, encoded.ToArray().Length);
             }
         }
 
-        private String readFromSerial ()
-        {          
-            string message = serialPort.ReadLine();
-            //Console.WriteLine(message);
-            return formCast.asciiToUtf(message);
+        private IEnumerable<byte> readFromSerial ()
+        {
+            byte[] byteArr = { };
+            IEnumerable<byte> decodedByteArr;
+            int offset = 0;
+            int count = 0;
+            serialPort.Read(byteArr, offset, count);
+            decodedByteArr = COBS.Decode(byteArr.AsEnumerable<byte>());
+            return decodedByteArr;
         }
         
 
@@ -145,7 +153,7 @@ namespace PIDTuner1
                     serialPort = null; 
                 }
                 serialPort = new SerialPort(portName, baudRate, Parity.None, 8, StopBits.One);
-                serialPort.NewLine = ";" ;
+                //serialPort.NewLine = ";";
                 if (serialPort.IsOpen == false)
                 {
                     serialPort.Open();
@@ -159,47 +167,69 @@ namespace PIDTuner1
 
         private void populateParameters ()
         {
-            string paramString = readFromSerial();
-            string[] splitString;
-            splitString = paramString.Split(':');
-            speedBox.Text = splitString[0];
-            motorP.Text = splitString[1];
-            motorI.Text = splitString[2];
-            motorD.Text = splitString[3];
-            lpfBoxMotor.Text = splitString[4];
-            steeringP.Text = splitString[5];
-            steeringI.Text = splitString[6];
-            steeringD.Text = splitString[7];
-            lpfBoxSteering.Text = splitString[8];
-            
+            IEnumerable<byte> paramByteArr = readFromSerial();
+
+            speedBox.Text = formCast.arrayToFloat(paramByteArr, 0).ToString();
+            motorP.Text = formCast.arrayToFloat(paramByteArr, 4).ToString();
+            motorI.Text = formCast.arrayToFloat(paramByteArr, 8).ToString();
+            motorD.Text = formCast.arrayToFloat(paramByteArr, 12).ToString();
+            lpfBoxMotor.Text = formCast.arrayToFloat(paramByteArr, 16).ToString();
+            steeringP.Text = formCast.arrayToFloat(paramByteArr, 20).ToString();
+            steeringI.Text = formCast.arrayToFloat(paramByteArr, 24).ToString();
+            steeringD.Text = formCast.arrayToFloat(paramByteArr, 28).ToString();
+            lpfBoxSteering.Text = formCast.arrayToFloat(paramByteArr, 32).ToString();
+
 
         }
 
 
         private void tuneMotor_Click(object sender, RoutedEventArgs e)
         {
+            byte[] command = { Convert.ToByte(formCast.utfToAscii("T")), Convert.ToByte(formCast.utfToAscii("M")) };
+            byte[] P = formCast.stringToFloatByteArray(motorP.Text);
+            byte[] I = formCast.stringToFloatByteArray(motorI.Text);
+            byte[] D = formCast.stringToFloatByteArray(motorD.Text);
+
+            byte[][] matrix = { command, P, I, D };
+            byte[] combined = formCast.combineByteArrs(matrix);
+            IEnumerable<byte> encoded = COBS.Encode(combined);
+            
             if (serialPort != null)
             { 
-                string str = (formCast.utfToAscii("TM:" + motorP.Text + ":" + motorI.Text + ":" + motorD.Text + ":;"));
-                serialPort.Write(str);
+                serialPort.Write(encoded.ToArray(), 0, encoded.ToArray().Length);
             }
         }
 
         private void tuneSteering_Click(object sender, RoutedEventArgs e)
         {
+            byte[] command = { Convert.ToByte(formCast.utfToAscii("T")), Convert.ToByte(formCast.utfToAscii("S")) };
+            byte[] P = formCast.stringToFloatByteArray(steeringP.Text);
+            byte[] I = formCast.stringToFloatByteArray(steeringI.Text);
+            byte[] D = formCast.stringToFloatByteArray(steeringD.Text);
+
+            byte[][] matrix = { command, P, I, D };
+            byte[] combined = formCast.combineByteArrs(matrix);
+            IEnumerable<byte> encoded = COBS.Encode(combined);
+
             if (serialPort != null)
             {
-                string str = (formCast.utfToAscii("TS:" + steeringP.Text + ":" + steeringI.Text + ":" + steeringD.Text + ":;"));
-                serialPort.Write(str);
+                serialPort.Write(encoded.ToArray(), 0, encoded.ToArray().Length);
             }
+           
         }
 
         private void change_Speed_Btn_Click(object sender, RoutedEventArgs e)
         {
+            byte[] command = { Convert.ToByte(formCast.utfToAscii("C")), Convert.ToByte(formCast.utfToAscii("V")) };
+            byte[] speed = formCast.stringToFloatByteArray(speedBox.Text);
+
+            byte[][] matrix = { command, speed};
+            byte[] combined = formCast.combineByteArrs(matrix);
+            IEnumerable<byte> encoded = COBS.Encode(combined);
+
             if (serialPort != null)
             {
-                string str = (formCast.utfToAscii("CV:" + speedBox.Text + ":;"));
-                serialPort.Write(str);
+                serialPort.Write(encoded.ToArray(), 0, encoded.ToArray().Length);
             }
         }
 
@@ -227,37 +257,54 @@ namespace PIDTuner1
 
         private void setLPFButtonSteering_Click(object sender, RoutedEventArgs e)
         {
+            byte[] command = { Convert.ToByte(formCast.utfToAscii("L")), Convert.ToByte(formCast.utfToAscii("S")) };
+            byte[] lpf = formCast.stringToFloatByteArray(lpfBoxSteering.Text);
+
+            byte[][] matrix = { command, lpf };
+            byte[] combined = formCast.combineByteArrs(matrix);
+            IEnumerable<byte> encoded = COBS.Encode(combined);
+
             if (serialPort != null)
             {
-                string str = (formCast.utfToAscii("LS:" + lpfBoxSteering.Text + ":;"));
-                serialPort.Write(str);
+                serialPort.Write(encoded.ToArray(), 0, encoded.ToArray().Length);
             }
+
         }
 
         private void setLPFButtonMotor_Click(object sender, RoutedEventArgs e)
         {
+            byte[] command = { Convert.ToByte(formCast.utfToAscii("L")), Convert.ToByte(formCast.utfToAscii("M")) };
+            byte[] lpf = formCast.stringToFloatByteArray(lpfBoxMotor.Text);
+
+            byte[][] matrix = { command, lpf };
+            byte[] combined = formCast.combineByteArrs(matrix);
+            IEnumerable<byte> encoded = COBS.Encode(combined);
+
             if (serialPort != null)
             {
-                string str = (formCast.utfToAscii("LM:" + lpfBoxMotor.Text + ":;"));
-                serialPort.Write(str);
+                serialPort.Write(encoded.ToArray(), 0, encoded.ToArray().Length);
             }
         }
 
         private void startBtn_Click(object sender, RoutedEventArgs e)
         {
+            byte[] command = { Convert.ToByte(formCast.utfToAscii("S")), Convert.ToByte(formCast.utfToAscii("1")) };
+            IEnumerable<byte> encoded = COBS.Encode(command);
+
             if (serialPort != null)
             {
-                string str = (formCast.utfToAscii("S1:;"));
-                serialPort.Write(str);
+                serialPort.Write(encoded.ToArray(), 0, encoded.ToArray().Length);
             }
         }
 
         private void stopBtn_Click(object sender, RoutedEventArgs e)
         {
+            byte[] command = { Convert.ToByte(formCast.utfToAscii("S")), Convert.ToByte(formCast.utfToAscii("0")) };
+            IEnumerable<byte> encoded = COBS.Encode(command);
+
             if (serialPort != null)
             {
-                string str = (formCast.utfToAscii("S0:;"));
-                serialPort.Write(str);
+                serialPort.Write(encoded.ToArray(), 0, encoded.ToArray().Length);
             }
         }
     }
