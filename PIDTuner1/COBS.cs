@@ -80,58 +80,80 @@ namespace PIDTuner1
                 result.Insert(distanceIndex, distance);
 
             // Return with the result
+            result.Add(0x00);
             return result;
         }
+        public static IEnumerable<byte> Decode(IEnumerable<byte> Input)
+        {
+            var input = Input.ToArray();
+            int index = 1;
+            int nextZero = input[0];
+            List<byte> output = new List<byte>();
 
+            while (index < input.Length) {
+                if (index == nextZero && input[index] != 0) {
+                    output.Add(0);
+                    nextZero += input[index];
+                } else if (index == nextZero && input[index] == 0) {
+                    break;
+                } else {
+                    output.Add(input[index]);
+                }
+                index++;
+            }
+
+            return output;
+        }
         /// <summary>
         /// The decoded data will be restored with all zeros which were removed
         /// during the decoding process.
         /// </summary>
         /// <param name="Input">A COBS encoded array</param>
         /// <returns>Returns the decoded input</returns>
-        public static IEnumerable<byte> Decode(IEnumerable<byte> Input)
-        {
-            if (Input == null)
-                return null;
+        //public static IEnumerable<byte> Decode(IEnumerable<byte> Input)
+        //{
+        //    if (Input == null)
+        //        return null;
 
-            if (Input.Count() > 255)
-                throw new ArgumentOutOfRangeException("Input length must not exceed 254 bytes");
+        //    if (Input.Count() > 255)
+        //        throw new ArgumentOutOfRangeException("Input length must not exceed 254 bytes");
 
-            var input = Input.ToArray();
-            var result = new List<byte>();
-            int distanceIndex = 0;
-            byte distance = 1;  // Distance to next zero
+        //    var input = Input.ToArray();
+        //    var result = new List<byte>();
+        //    int distanceIndex = 0;
+        //    int templen = input.Length;
+        //    byte distance = 1;  // Distance to next zero
 
-            // Continue decoding which the next index is valid
-            while (distanceIndex < input.Length)
-            {
-                // Get the next distance value
-                distance = input[distanceIndex];
+        //    Continue decoding which the next index is valid
+        //    while (distanceIndex < input.Length)
+        //    {
+        //        Get the next distance value
+        //       distance = input[distanceIndex];
 
-                // Ensure the input is formatted correctly (distanceIndex + distance)
-                if (input.Length < distanceIndex + distance || distance < 1)
-                {
-                    Trace.WriteLine("Consistent Overhead Byte Stuffing failed to parse an input.");
-                    return new List<byte>();
-                }
+        //        Ensure the input is formatted correctly (distanceIndex + distance)
+        //        if (input.Length < distanceIndex + distance || distance < 1)
+        //        {
+        //            Trace.WriteLine("Consistent Overhead Byte Stuffing failed to parse an input.");
+        //            return new List<byte>();
+        //        }
 
-                // Add the range of byte up to the next zero
-                if (distance > 1)
-                {
-                    for (byte i = 1; i < distance; i++)
-                        result.Add(input[distanceIndex + i]);
-                }
+        //        Add the range of byte up to the next zero
+        //        if (distance > 1)
+        //        {
+        //            for (byte i = 1; i < distance; i++)
+        //                result.Add(input[distanceIndex + i]);
+        //        }
 
-                // Determine the next distance index (doing this here assists the below if)
-                distanceIndex += distance;
+        //        Determine the next distance index(doing this here assists the below if)
+        //            distanceIndex += distance;
 
-                // Add the original zero back
-                if (distance < 0xFF && distanceIndex < input.Length)
-                    result.Add(0);
-            }
+        //        Add the original zero back
+        //        if (distance < 0xFF && distanceIndex < input.Length)
+        //            result.Add(0);
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
         /// <summary>
         /// Stuffs "length" bytes of data at the location pointed to by

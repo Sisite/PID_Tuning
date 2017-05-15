@@ -14,6 +14,7 @@ namespace Wpf.CartesianChart.ConstantChanges
         private double _axisMax;
         private double _axisMin;
         private double _trend;
+        //public static float errorValue = 0.0f;
 
         public ConstantChangesChart()
         {
@@ -39,6 +40,7 @@ namespace Wpf.CartesianChart.ConstantChanges
 
             //the values property will store our values array
             ChartValues = new ChartValues<MeasureModel>();
+            ChartValuesOutput = new ChartValues<MeasureModel>();
 
             //lets set how to display the X Labels
             DateTimeFormatter = value => new DateTime((long)value).ToString("mm:ss");
@@ -58,8 +60,12 @@ namespace Wpf.CartesianChart.ConstantChanges
             DataContext = this;
         }
 
+
         public ChartValues<MeasureModel> ChartValues { get; set; }
+        public ChartValues<MeasureModel> ChartValuesOutput { get; set; }
         public Func<double, string> DateTimeFormatter { get; set; }
+        public static float errorValue { get; set; }
+        public static float outputValue { get; set; }
         public double AxisStep { get; set; }
         public double AxisUnit { get; set; }
 
@@ -84,40 +90,47 @@ namespace Wpf.CartesianChart.ConstantChanges
 
         public bool IsReading { get; set; }
 
-        private void Read()
+        public void updateChart()
         {
-            var r = new Random();
+            //var r = new Random();
 
             while (IsReading)
             {
-                Thread.Sleep(10);
+                Thread.Sleep(200);
                 var now = DateTime.Now;
 
-                _trend += r.Next(-8, 10);
+
+                //_trend += r.Next(-8, 10);
 
                 ChartValues.Add(new MeasureModel
                 {
                     DateTime = now,
-                    Value = _trend
+                    Value = errorValue
+                });
+                ChartValuesOutput.Add(new MeasureModel
+                {
+                    DateTime = now,
+                    Value = (outputValue / 10.0f)
                 });
 
                 SetAxisLimits(now);
 
                 //lets only use the last 150 values
-                if (ChartValues.Count > 500) ChartValues.RemoveAt(0);
+                if (ChartValues.Count > 20) ChartValues.RemoveAt(0);
+                if (ChartValuesOutput.Count > 20) ChartValuesOutput.RemoveAt(0);
             }
         }
 
         private void SetAxisLimits(DateTime now)
         {
             AxisMax = now.Ticks + TimeSpan.FromSeconds(1).Ticks; // lets force the axis to be 1 second ahead
-            AxisMin = now.Ticks - TimeSpan.FromSeconds(8).Ticks; // and 8 seconds behind
+            AxisMin = now.Ticks - TimeSpan.FromSeconds(4).Ticks; // and 8 seconds behind
         }
 
         private void InjectStopOnClick(object sender, RoutedEventArgs e)
         {
             IsReading = !IsReading;
-            if (IsReading) Task.Factory.StartNew(Read);
+            if (IsReading) Task.Factory.StartNew(updateChart);
         }
 
         #region INotifyPropertyChanged implementation

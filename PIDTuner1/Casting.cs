@@ -59,11 +59,11 @@ namespace PIDTuner1
             return uniS;
         }
 
-        public byte[] stringToArray(string str)
-        {
-            byte[] asciiB = BitConverter.GetBytes(str);
-            return asciiB;
-        }
+        //public byte[] stringToArray(string str)
+        //{
+         //   byte[] asciiB = BitConverter.GetBytes(str);
+        //    return asciiB;
+        //}
 
         public byte[] floatToArray(float flt)
         {

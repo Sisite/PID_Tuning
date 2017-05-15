@@ -17,6 +17,8 @@ using System.Threading;
 using LiveCharts;
 using LiveCharts.Wpf;
 using System.Globalization;
+using Wpf.CartesianChart.ConstantChanges;
+using System.Threading.Tasks;
 
 
 namespace PIDTuner1
@@ -26,8 +28,12 @@ namespace PIDTuner1
     /// </summary>
     public partial class MainWindow : Window
     {
+        //float errorValue = 0;
         SerialPort serialPort;
         Casting formCast = new Casting();
+        int threadStarted = 0;
+        //ConstantChangesChart cw = new ConstantChangesChart();
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -35,7 +41,7 @@ namespace PIDTuner1
             getComPorts();
             disconnectBtn.IsEnabled = false;
             fetchBtn.IsEnabled = false;
-            byte[] tmp = formCast.stringToArray("H");
+           // byte[] tmp = formCast.stringToArray("H");
             //Console.WriteLine(formCast.stringToArray("HEJ"));
             //pidSteeringCollection;
             //CartesianChart cartesianChart = new CartesianChart();
@@ -70,7 +76,8 @@ namespace PIDTuner1
             
 
             DataContext = this;
-           // ConstantChangesChart cw = new ConstantChangesChart();
+            
+
             //cw.ShowInTaskbar = false;
             //cw.Owner = Application.Current.MainWindow;
             //cw.Show();
@@ -118,7 +125,8 @@ namespace PIDTuner1
         //Communication example with Steering T:M:1.0:2.5:3.5:S:0.5:0.3:4.3:;
 
         private void getParameters() {
-            byte[] command = { Convert.ToByte(formCast.utfToAscii("F")), Convert.ToByte(formCast.utfToAscii("0")) };
+            //byte[] command = { Convert.ToByte(formCast.utfToAscii("F")), Convert.ToByte(formCast.utfToAscii("0")) };
+            byte[] command = { 0x46, 0x30 };
             IEnumerable<byte> encoded = COBS.Encode(command);
 
             if (serialPort != null)
@@ -127,15 +135,42 @@ namespace PIDTuner1
             }
         }
 
-        private IEnumerable<byte> readFromSerial ()
+        private void refreshChart()
         {
-            byte[] byteArr = { };
-            IEnumerable<byte> decodedByteArr;
+            while(true)
+            {
+                byte[] command = { 0x45, 0x4F }; // Pid error for steering
+                IEnumerable<byte> encoded = COBS.Encode(command);
+
+                if (serialPort != null)
+                {
+                    serialPort.Write(encoded.ToArray(), 0, encoded.ToArray().Length);
+                }
+
+                List<byte> paramByteArr = readFromSerial(10).ToList<byte>();
+                ConstantChangesChart.errorValue = formCast.arrayToFloat(paramByteArr, 0);
+                ConstantChangesChart.outputValue = formCast.arrayToFloat(paramByteArr, 4);
+                Thread.Sleep(200);
+            }
+
+        }
+
+        public IEnumerable<byte> readFromSerial (int nrOfBytes)
+        {
+            byte[] byteArr = new byte[nrOfBytes];
+            int readCount;
             int offset = 0;
-            int count = 0;
-            serialPort.Read(byteArr, offset, count);
-            decodedByteArr = COBS.Decode(byteArr.AsEnumerable<byte>());
-            return decodedByteArr;
+
+            while (nrOfBytes > 0 && (readCount = serialPort.Read(byteArr, offset, nrOfBytes)) > 0)
+            {
+                offset += readCount;
+                nrOfBytes -= readCount;
+            }
+
+            //serialPort.Read(byteArr, offset, nrOfBytes);
+            //IEnumerable<byte> decodedByteArr = COBS.Decode(byteArr.AsEnumerable<byte>());
+            //return decodedByteArr;
+            return COBS.Decode(byteArr.AsEnumerable<byte>());
         }
         
 
@@ -167,8 +202,8 @@ namespace PIDTuner1
 
         private void populateParameters ()
         {
-            IEnumerable<byte> paramByteArr = readFromSerial();
 
+            List<byte> paramByteArr = readFromSerial(38).ToList<byte>();
             speedBox.Text = formCast.arrayToFloat(paramByteArr, 0).ToString();
             motorP.Text = formCast.arrayToFloat(paramByteArr, 4).ToString();
             motorI.Text = formCast.arrayToFloat(paramByteArr, 8).ToString();
@@ -179,13 +214,16 @@ namespace PIDTuner1
             steeringD.Text = formCast.arrayToFloat(paramByteArr, 28).ToString();
             lpfBoxSteering.Text = formCast.arrayToFloat(paramByteArr, 32).ToString();
 
+ 
+            
 
         }
 
 
         private void tuneMotor_Click(object sender, RoutedEventArgs e)
         {
-            byte[] command = { Convert.ToByte(formCast.utfToAscii("T")), Convert.ToByte(formCast.utfToAscii("M")) };
+            //byte[] command = { Convert.ToByte(formCast.utfToAscii("T")), Convert.ToByte(formCast.utfToAscii("M")) };
+            byte[] command = { 0x54, 0x4D };
             byte[] P = formCast.stringToFloatByteArray(motorP.Text);
             byte[] I = formCast.stringToFloatByteArray(motorI.Text);
             byte[] D = formCast.stringToFloatByteArray(motorD.Text);
@@ -202,7 +240,8 @@ namespace PIDTuner1
 
         private void tuneSteering_Click(object sender, RoutedEventArgs e)
         {
-            byte[] command = { Convert.ToByte(formCast.utfToAscii("T")), Convert.ToByte(formCast.utfToAscii("S")) };
+            //  byte[] command = { Convert.ToByte(formCast.utfToAscii("T")), Convert.ToByte(formCast.utfToAscii("S")) };
+            byte[] command = { 0x54, 0x53 };
             byte[] P = formCast.stringToFloatByteArray(steeringP.Text);
             byte[] I = formCast.stringToFloatByteArray(steeringI.Text);
             byte[] D = formCast.stringToFloatByteArray(steeringD.Text);
@@ -220,7 +259,8 @@ namespace PIDTuner1
 
         private void change_Speed_Btn_Click(object sender, RoutedEventArgs e)
         {
-            byte[] command = { Convert.ToByte(formCast.utfToAscii("C")), Convert.ToByte(formCast.utfToAscii("V")) };
+            //byte[] command = { Convert.ToByte(formCast.utfToAscii("C")), Convert.ToByte(formCast.utfToAscii("V")) };
+            byte[] command = { 0x43, 0x56 };
             byte[] speed = formCast.stringToFloatByteArray(speedBox.Text);
 
             byte[][] matrix = { command, speed};
@@ -257,7 +297,8 @@ namespace PIDTuner1
 
         private void setLPFButtonSteering_Click(object sender, RoutedEventArgs e)
         {
-            byte[] command = { Convert.ToByte(formCast.utfToAscii("L")), Convert.ToByte(formCast.utfToAscii("S")) };
+            //byte[] command = { Convert.ToByte(formCast.utfToAscii("L")), Convert.ToByte(formCast.utfToAscii("S")) };
+            byte[] command = { 0x4C, 0x53 };
             byte[] lpf = formCast.stringToFloatByteArray(lpfBoxSteering.Text);
 
             byte[][] matrix = { command, lpf };
@@ -273,7 +314,8 @@ namespace PIDTuner1
 
         private void setLPFButtonMotor_Click(object sender, RoutedEventArgs e)
         {
-            byte[] command = { Convert.ToByte(formCast.utfToAscii("L")), Convert.ToByte(formCast.utfToAscii("M")) };
+            //byte[] command = { Convert.ToByte(formCast.utfToAscii("L")), Convert.ToByte(formCast.utfToAscii("M")) };
+            byte[] command = { 0x4C, 0x4D };
             byte[] lpf = formCast.stringToFloatByteArray(lpfBoxMotor.Text);
 
             byte[][] matrix = { command, lpf };
@@ -288,7 +330,8 @@ namespace PIDTuner1
 
         private void startBtn_Click(object sender, RoutedEventArgs e)
         {
-            byte[] command = { Convert.ToByte(formCast.utfToAscii("S")), Convert.ToByte(formCast.utfToAscii("1")) };
+            //byte[] command = { Convert.ToByte(formCast.utfToAscii("S")), Convert.ToByte(formCast.utfToAscii("1")) };
+            byte[] command = { 0x53, 0x31 };
             IEnumerable<byte> encoded = COBS.Encode(command);
 
             if (serialPort != null)
@@ -299,13 +342,24 @@ namespace PIDTuner1
 
         private void stopBtn_Click(object sender, RoutedEventArgs e)
         {
-            byte[] command = { Convert.ToByte(formCast.utfToAscii("S")), Convert.ToByte(formCast.utfToAscii("0")) };
+            //byte[] command = { Convert.ToByte(formCast.utfToAscii("S")), Convert.ToByte(formCast.utfToAscii("0")) };
+            byte[] command = { 0x53, 0x30 };
             IEnumerable<byte> encoded = COBS.Encode(command);
 
             if (serialPort != null)
             {
                 serialPort.Write(encoded.ToArray(), 0, encoded.ToArray().Length);
             }
+        }
+
+        private void readBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (threadStarted == 0)
+            {
+                Task.Factory.StartNew(refreshChart);
+                threadStarted = 1;
+            }
+
         }
     }
 
