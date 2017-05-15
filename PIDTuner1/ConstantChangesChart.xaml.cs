@@ -110,7 +110,7 @@ namespace Wpf.CartesianChart.ConstantChanges
                 ChartValuesOutput.Add(new MeasureModel
                 {
                     DateTime = now,
-                    Value = (outputValue / 10.0f)
+                    Value = (outputValue / 100.0f)
                 });
 
                 SetAxisLimits(now);

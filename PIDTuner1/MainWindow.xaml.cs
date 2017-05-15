@@ -203,7 +203,7 @@ namespace PIDTuner1
         private void populateParameters ()
         {
 
-            List<byte> paramByteArr = readFromSerial(38).ToList<byte>();
+            List<byte> paramByteArr = readFromSerial(50).ToList<byte>();
             speedBox.Text = formCast.arrayToFloat(paramByteArr, 0).ToString();
             motorP.Text = formCast.arrayToFloat(paramByteArr, 4).ToString();
             motorI.Text = formCast.arrayToFloat(paramByteArr, 8).ToString();
@@ -213,9 +213,12 @@ namespace PIDTuner1
             steeringI.Text = formCast.arrayToFloat(paramByteArr, 24).ToString();
             steeringD.Text = formCast.arrayToFloat(paramByteArr, 28).ToString();
             lpfBoxSteering.Text = formCast.arrayToFloat(paramByteArr, 32).ToString();
+            ffBox.Text = formCast.arrayToFloat(paramByteArr, 36).ToString();
+            distBox.Text = formCast.arrayToFloat(paramByteArr, 40).ToString();
+            timeBox.Text = formCast.arrayToFloat(paramByteArr, 44).ToString();
 
- 
-            
+
+
 
         }
 
@@ -358,6 +361,53 @@ namespace PIDTuner1
             {
                 Task.Factory.StartNew(refreshChart);
                 threadStarted = 1;
+            }
+
+        }
+
+        private void ffBtn_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] command = { 0x46, 0x46 };
+            byte[] ff = formCast.stringToFloatByteArray(ffBox.Text);
+
+            byte[][] matrix = { command, ff };
+            byte[] combined = formCast.combineByteArrs(matrix);
+            IEnumerable<byte> encoded = COBS.Encode(combined);
+
+            if (serialPort != null)
+            {
+                serialPort.Write(encoded.ToArray(), 0, encoded.ToArray().Length);
+            }
+        }
+
+        private void distBtn_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] command = { 0x4F, 0x44 };
+            byte[] dist = formCast.stringToFloatByteArray(distBox.Text);
+
+            byte[][] matrix = { command, dist };
+            byte[] combined = formCast.combineByteArrs(matrix);
+            IEnumerable<byte> encoded = COBS.Encode(combined);
+
+            if (serialPort != null)
+            {
+                serialPort.Write(encoded.ToArray(), 0, encoded.ToArray().Length);
+            }
+
+        }
+
+        private void timeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] command = { 0x4F, 0x54 };
+            byte[] time = formCast.stringToFloatByteArray(timeBox.Text);
+
+            byte[][] matrix = { command, time };
+            byte[] combined = formCast.combineByteArrs(matrix);
+            IEnumerable<byte> encoded = COBS.Encode(combined);
+
+            if (serialPort != null)
+            {
+                serialPort.Write(encoded.ToArray(), 0, encoded.ToArray().Length);
             }
 
         }

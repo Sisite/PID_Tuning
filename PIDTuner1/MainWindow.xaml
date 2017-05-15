@@ -48,7 +48,8 @@
         <TextBox x:Name="lpfBoxMotor" MaxLength="6" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="57,379,0,0"/>
         <Label Content="LPF M" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="11,376,0,0"/>
         <Button x:Name="setLPFButtonMotor" Content="Set" HorizontalAlignment="Left" VerticalAlignment="Top" Width="40" Margin="186,382,0,0" Click="setLPFButtonMotor_Click"/>
-        <!--<lvc:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Right" Margin="609,26,367,435.5" >--><!--
+        <!--<lvc:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Right" Margin="609,26,367,435.5" >-->
+        <!--
         <lvc:CartesianChart x:Name="cartesianChart" LegendLocation="Right" Margin="609,26,367,435.5" >
             <lvc:CartesianChart.AxisY>
                 <lvc:Axis Title="Sales" LabelFormatter="{Binding YFormatter}"></lvc:Axis>
@@ -61,6 +62,15 @@
         <Button x:Name="stopBtn" Content="Stop" HorizontalAlignment="Left" Margin="432,64,0,0" VerticalAlignment="Top" Width="75" Click="stopBtn_Click" TabIndex="9"/>
         <controls:ConstantChangesChart Margin="799,0,0,0" ></controls:ConstantChangesChart>
         <Button x:Name="readBtn"  Content="Read data" HorizontalAlignment="Left" Margin="137,101,0,0" VerticalAlignment="Top" Width="75" Click="readBtn_Click"/>
+        <TextBox x:Name="ffBox" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="338,323,0,0"/>
+        <Label Content="FF Multi" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="283,319,0,0" RenderTransformOrigin="0.5,-0.885"/>
+        <Button x:Name="ffBtn" Content="Set" HorizontalAlignment="Left" VerticalAlignment="Top" Width="40" Margin="467,326,0,0" Click="ffBtn_Click"/>
+        <TextBox x:Name="distBox" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="57,476,0,0"/>
+        <Label Content="Dist" HorizontalAlignment="Left" Margin="19,472,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="distBtn" Content="Set" HorizontalAlignment="Left" VerticalAlignment="Top" Width="40" Margin="186,478,0,0" Click="distBtn_Click"/>
+        <TextBox x:Name="timeBox" HorizontalAlignment="Left" Height="22" Margin="338,476,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <Button x:Name="timeBtn" Content="Set" HorizontalAlignment="Left" Margin="467,478,0,0" VerticalAlignment="Top" Width="40" Click="timeBtn_Click"/>
+        <Label Content="Time" HorizontalAlignment="Left" Margin="295,472,0,0" VerticalAlignment="Top"/>
     </Grid>
-    
+
 </Window>
