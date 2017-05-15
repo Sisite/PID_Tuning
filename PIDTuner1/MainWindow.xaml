@@ -71,6 +71,7 @@
         <TextBox x:Name="timeBox" HorizontalAlignment="Left" Height="22" Margin="338,476,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
         <Button x:Name="timeBtn" Content="Set" HorizontalAlignment="Left" Margin="467,478,0,0" VerticalAlignment="Top" Width="40" Click="timeBtn_Click"/>
         <Label Content="Time" HorizontalAlignment="Left" Margin="295,472,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="oaBtn" Content="Toggle OA" HorizontalAlignment="Left" Margin="58,521,0,0" VerticalAlignment="Top" Width="75" Click="oaBtn_Click"/>
     </Grid>
 
 </Window>

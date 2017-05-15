@@ -411,6 +411,17 @@ namespace PIDTuner1
             }
 
         }
+
+        private void oaBtn_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] command = { 0x54, 0x4F };
+            IEnumerable<byte> encoded = COBS.Encode(command);
+
+            if (serialPort != null)
+            {
+                serialPort.Write(encoded.ToArray(), 0, encoded.ToArray().Length);
+            }
+        }
     }
 
 }
