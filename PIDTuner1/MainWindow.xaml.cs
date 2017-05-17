@@ -414,7 +414,12 @@ namespace PIDTuner1
 
         private void oaBtn_Click(object sender, RoutedEventArgs e)
         {
+            string onTgl = "1";
             byte[] command = { 0x54, 0x4F };
+            byte[] dist = formCast.stringToFloatByteArray(onTgl);
+
+            byte[][] matrix = { command, dist };
+            byte[] combined = formCast.combineByteArrs(matrix);
             IEnumerable<byte> encoded = COBS.Encode(command);
 
             if (serialPort != null)
@@ -422,6 +427,24 @@ namespace PIDTuner1
                 serialPort.Write(encoded.ToArray(), 0, encoded.ToArray().Length);
             }
         }
+
+        private void oaOffBtn_Click(object sender, RoutedEventArgs e)
+        {
+            string offTgl = "0";
+            byte[] command = { 0x54, 0x4F };
+            byte[] dist = formCast.stringToFloatByteArray(offTgl);
+
+            byte[][] matrix = { command, dist };
+            byte[] combined = formCast.combineByteArrs(matrix);
+            IEnumerable<byte> encoded = COBS.Encode(command);
+
+            if (serialPort != null)
+            {
+                serialPort.Write(encoded.ToArray(), 0, encoded.ToArray().Length);
+            }
+        }
+
+    }
     }
 
 }
